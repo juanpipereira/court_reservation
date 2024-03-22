@@ -19,12 +19,9 @@ class PrecipitationsDTO {
 
     final dayIndex = newRequestedDate.difference(today).inDays;
 
-    print('--- difference of days $dayIndex');
-
     int chanceOfPrecipitation =
         json['DailyForecasts'][dayIndex]['Day']['RainProbability'];
 
-    print('--- $chanceOfPrecipitation');
     return PrecipitationsDTO(chanceOfPrecipitation);
   }
 

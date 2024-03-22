@@ -53,155 +53,178 @@ class _AddReservationDialogState extends State<AddReservationDialog> {
     }
 
     return Dialog.fullscreen(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(12.0),
+      child: CustomScrollView(
+        slivers: [
+          SliverFillRemaining(
+            hasScrollBody: false,
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
-                const Text(
-                  'Add a reservation',
-                  style: TextStyle(
-                    color: Colors.black87,
-                    fontSize: 24,
-                  ),
-                ),
-                const SizedBox(
-                  height: 20.0,
-                ),
-                const InputTitle(title: 'Date'),
-                Row(
-                  children: [
-                    Text(date?.formatLegible() ?? 'No date'),
-                    OutlinedButton(
-                      onPressed: () async {
-                        final newDate = await showDatePicker(
-                          context: context,
-                          firstDate: DateTime.now(),
-                          lastDate: DateTime.now().add(
-                            const Duration(days: 4),
-                          ),
-                        );
-                        if (newDate != null) {
-                          setState(
-                            () {
-                              date = newDate;
-                            },
-                          );
-                          await precipitations
-                              .fetchChanceOfPrecipitation(date!);
-                        }
-                      },
-                      child: const Text('Pick Date'),
-                    ),
-                  ],
-                ),
-                const InputTitle(title: 'Court'),
-                CourtSelector(
-                  callback: (newCourt) {
-                    setState(() {
-                      court = newCourt;
-                    });
-                  },
-                ),
-                const InputTitle(title: 'Name'),
-                SizedBox(
-                  height: 75.0,
-                  width: 300.0,
-                  child: TextField(
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(
-                        borderSide: BorderSide(
-                          color: Colors.grey,
-                          width: 1.5,
+                Padding(
+                  padding: const EdgeInsets.all(12.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Text(
+                        'Add a reservation',
+                        style: TextStyle(
+                          color: Colors.black87,
+                          fontSize: 24,
                         ),
                       ),
-                      hintText: 'Your name',
-                    ),
-                    maxLength: 20,
-                    onChanged: (value) => setState(
-                      () {
-                        userName = value;
-                      },
-                    ),
-                  ),
-                ),
-                Row(
-                  children: [
-                    Image.asset('rain.png'),
-                    const SizedBox(
-                      width: 10,
-                    ),
-                    const Text('Chances of precipitation:'),
-                    Text(
-                      '${precipitations.chanceOfPrecipitation?.percentage ?? 'NA'}%',
-                      style: TextStyle(
-                        color: Colors.blue.shade400,
-                        fontSize: 25,
+                      const SizedBox(
+                        height: 20.0,
                       ),
-                    ),
-                  ],
-                ),
-                if (isCourtIndexAvailable) ...[
-                  const InputTitle(title: 'Court number'),
-                  Text(
-                    possibleCourtIndex != null
-                        ? 'The number of court is $possibleCourtIndex'
-                        : 'Sorry, there is no court available on that date',
-                    style: TextStyle(
-                      color: possibleCourtIndex != null
-                          ? null
-                          : Colors.red.shade600,
-                      fontSize: 18,
-                    ),
-                  ),
-                ],
-              ],
-            ),
-          ),
-          const Spacer(),
-          Padding(
-            padding: const EdgeInsets.symmetric(
-              vertical: 10.0,
-            ),
-            child: Row(
-              children: [
-                const SizedBox(width: 15),
-                Expanded(
-                  child: OutlinedButton(
-                    onPressed: () => Navigator.pop(context),
-                    child: const Text('Cancel'),
-                  ),
-                ),
-                const SizedBox(width: 15),
-                Expanded(
-                  child: ElevatedButton(
-                    onPressed: isButtonActive
-                        ? () async {
-                            await widget.controller.addData(
-                              CourtReservation(
-                                courtName: (court ?? Court.a).name,
-                                date: date ?? DateTime.now(),
-                                id: possibleCourtIndex ?? 0,
-                                precipitations:
-                                    precipitations.chanceOfPrecipitation ??
-                                        const Precipitations(0),
-                                userName: userName ?? '',
+                      const InputTitle(title: 'Date'),
+                      Row(
+                        children: [
+                          Text(
+                            date?.formatLegible() ?? 'No date',
+                            style: const TextStyle(fontSize: 18),
+                          ),
+                          const SizedBox(width: 8),
+                          OutlinedButton(
+                            onPressed: () async {
+                              final newDate = await showDatePicker(
+                                context: context,
+                                firstDate: DateTime.now(),
+                                lastDate: DateTime.now().add(
+                                  const Duration(days: 4),
+                                ),
+                              );
+                              if (newDate != null) {
+                                setState(
+                                  () {
+                                    date = newDate;
+                                  },
+                                );
+                                await precipitations
+                                    .fetchChanceOfPrecipitation(date!);
+                              }
+                            },
+                            child: const Text('Pick Date'),
+                          ),
+                        ],
+                      ),
+                      const InputTitle(title: 'Court'),
+                      CourtSelector(
+                        callback: (newCourt) {
+                          setState(() {
+                            court = newCourt;
+                          });
+                        },
+                      ),
+                      const InputTitle(title: 'Name'),
+                      SizedBox(
+                        height: 75.0,
+                        width: 300.0,
+                        child: TextField(
+                          decoration: const InputDecoration(
+                            border: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                color: Colors.grey,
+                                width: 1.5,
                               ),
-                            );
-                            Future(() => Navigator.pop(context));
-                          }
-                        : null,
-                    child: const Text('Add Reservation'),
+                            ),
+                            hintText: 'Your name',
+                          ),
+                          maxLength: 20,
+                          onChanged: (value) => setState(
+                            () {
+                              userName = value;
+                            },
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 5),
+                      Row(
+                        children: [
+                          Image.asset(
+                            'assets/rain.png',
+                            scale: 1.2,
+                          ),
+                          const SizedBox(
+                            width: 10,
+                          ),
+                          const SizedBox(width: 5),
+                          const Text(
+                            'Precipitations chances:',
+                            style: TextStyle(
+                              fontSize: 18,
+                            ),
+                          ),
+                          const SizedBox(width: 5),
+                          Text(
+                            '${precipitations.chanceOfPrecipitation?.percentage ?? 'NA'}%',
+                            style: TextStyle(
+                              color: Colors.blue.shade400,
+                              fontSize: 25,
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 5),
+                      if (isCourtIndexAvailable) ...[
+                        const InputTitle(title: 'Court number'),
+                        Text(
+                          possibleCourtIndex != null
+                              ? 'The number of court is $possibleCourtIndex'
+                              : 'Sorry, there is no court available on that date',
+                          style: TextStyle(
+                            color: possibleCourtIndex != null
+                                ? null
+                                : Colors.red.shade600,
+                            fontSize: 18,
+                          ),
+                        ),
+                      ],
+                    ],
                   ),
                 ),
-                const SizedBox(width: 15),
+                const Spacer(),
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 10.0,
+                  ),
+                  child: Row(
+                    children: [
+                      const SizedBox(width: 15),
+                      Expanded(
+                        child: OutlinedButton(
+                          onPressed: () => Navigator.pop(context),
+                          child: const Text('Cancel'),
+                        ),
+                      ),
+                      const SizedBox(width: 15),
+                      Expanded(
+                        child: ElevatedButton(
+                          onPressed: isButtonActive
+                              ? () async {
+                                  await widget.controller.addData(
+                                    CourtReservation(
+                                      courtName: (court ?? Court.a).name,
+                                      date: date ?? DateTime.now(),
+                                      id: possibleCourtIndex ?? 0,
+                                      precipitations: precipitations
+                                              .chanceOfPrecipitation ??
+                                          const Precipitations(0),
+                                      userName: userName ?? '',
+                                    ),
+                                  );
+                                  Future(() => Navigator.pop(context));
+                                }
+                              : null,
+                          child: const Text('Add Reservation'),
+                        ),
+                      ),
+                      const SizedBox(width: 15),
+                    ],
+                  ),
+                ),
               ],
             ),
-          ),
+          )
         ],
       ),
     );
