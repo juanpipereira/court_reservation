@@ -28,7 +28,7 @@ class _ReservationsListState extends State<ReservationsList> {
     return Consumer<CourtReservationController>(
       builder: (context, controller, _) {
         return Padding(
-          padding: const EdgeInsets.only(top: 15),
+          padding: const EdgeInsets.only(top: 20),
           child: ListView.builder(
             itemCount: controller.data.length,
             itemBuilder: (context, index) {

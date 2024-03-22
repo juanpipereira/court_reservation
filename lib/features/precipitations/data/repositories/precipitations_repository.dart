@@ -8,9 +8,7 @@ import 'package:http/http.dart' as http;
 import '../dtos/precipitations_dto.dart';
 
 class PrecipitationsRepository {
-  // final String apiKey =
-  //     'ViCOttv3ydl8bLLRdzlPWTVRGtcr2lql';
-  final String apiKey = ''; // Fake api key
+  final String apiKey = 'ViCOttv3ydl8bLLRdzlPWTVRGtcr2lql';
 
   Future<Precipitations?> getChanceOfPrecipitation(
     String locationKey,
