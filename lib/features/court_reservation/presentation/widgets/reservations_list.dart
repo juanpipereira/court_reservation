@@ -37,7 +37,45 @@ class _ReservationsListState extends State<ReservationsList> {
               return CourtReservationTile(
                 clubName: reservation.courtName,
                 date: reservation.date,
-                deleteCallback: () async => await controller.deleteData(index),
+                deleteCallback: () async {
+                  final result = await showDialog(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                      title: const Text(
+                        'Are you sure to delete this reservation?',
+                        style: TextStyle(fontSize: 21),
+                      ),
+                      actionsPadding: const EdgeInsets.symmetric(
+                        horizontal: 20.0,
+                        vertical: 14.0,
+                      ),
+                      actions: [
+                        Row(
+                          children: [
+                            Expanded(
+                              child: OutlinedButton(
+                                onPressed: () => Navigator.pop(context, false),
+                                child: const Text('Cancel'),
+                              ),
+                            ),
+                            const SizedBox(
+                              width: 12,
+                            ),
+                            Expanded(
+                              child: ElevatedButton(
+                                onPressed: () => Navigator.pop(context, true),
+                                child: const Text('Delete'),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  );
+                  if (result == true) {
+                    await controller.deleteData(index);
+                  }
+                },
                 reservationNumber: reservation.id,
                 userName: reservation.userName,
               );
